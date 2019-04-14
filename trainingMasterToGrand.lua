@@ -1,4 +1,4 @@
-quest traningMasterToGrand begin
+quest trainingSoulStones begin
 	state start begin
 		function isQuestAvailable(isItem)
 			if not pc.can_warp() then say("Trebuie sa astepti 10 secunde pentru a continua!") return false; end
@@ -21,7 +21,7 @@ quest traningMasterToGrand begin
 				local skillLevel = pc.get_skill_level(selectedTable["skillVnums"][index]);
 				
 				if ((skillLevel >= minimumSkillLevel) and (skillLevel < maximumSkillLevel)) then
-					local stringValue = traningMasterToGrand.returnSkillString(index);
+					local stringValue = trainingSoulStones.returnSkillString(index);
 					table.insert(selectSkillTable["skillData"], string.format("%s", stringValue));
 					table.insert(selectSkillTable["skillIndex"], index);
 				end
@@ -61,7 +61,7 @@ quest traningMasterToGrand begin
 			local playerGroup = pc.get_skill_group();
 			local selectedTable = playerSkillData[playerJob + 1][playerGroup];
 			
-			local skillArray = traningMasterToGrand.insertSkillData();
+			local skillArray = trainingSoulStones.insertSkillData();
 			if (table.getn(skillArray["skillData"]) < 2) then
 				say("Nu ai aptitudini de imbunatatit.")
 				return;
@@ -69,14 +69,14 @@ quest traningMasterToGrand begin
 			
 			local selectChoice = select_table(skillArray["skillData"]);
 			if (selectChoice == table.getn(skillArray["skillData"])) then return; end
-			if (traningMasterToGrand.isQuestAvailable(true)) then
+			if (isQuestAvailable.isQuestAvailable(true)) then
 				local skillLevel = pc.get_skill_level(selectedTable["skillVnums"][skillArray["skillIndex"][selectChoice]]);
 				
-				local stringValue = traningMasterToGrand.returnSkillString(selectedTable["skillVnums"][skillArray["skillIndex"][selectChoice]]);
+				local stringValue = trainingSoulStones.returnSkillString(skillArray["skillIndex"][selectChoice]);
 				say(string.format("Esti sigur ca doresti sa imbunatatesti[ENTER]%s?", stringValue))
 				
-				if (select("Da, te rog", "Nu, multumesc") == 1) then
-					if (traningMasterToGrand.isQuestAvailable(true)) then
+				if (select("Yes, sir", "No, thanks") == 1) then
+					if (isQuestAvailable.isQuestAvailable(true)) then
 						local currentAligment = pc.get_real_alignment();
 						local requireAligment = 1000+500*(skillLevel-30)
 						
